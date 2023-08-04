@@ -28,13 +28,9 @@ public class CurrencyRequestInfoServiceImpl implements CurrencyRequestInfoServic
 
     @Override
     @Transactional
-    public void saveRequest(CurrencyValueRequest currencyValueRequest, BigDecimal responseValue) {
+    public void saveRequest(CurrencyValueRequest currencyValueRequest, BigDecimal responseExchangeRate) {
         log.info("Saving request for {}", currencyValueRequest.getRequestAuthor());
-        CurrencyRequestInfoEntity currencyRequestInfoEntity = CurrencyRequestInfoEntity.builder()
-                .currency(currencyValueRequest.getCurrency())
-                .requestAuthor(currencyValueRequest.getRequestAuthor())
-                .value(responseValue)
-                .build();
+        CurrencyRequestInfoEntity currencyRequestInfoEntity = buildFullCurrencyRequestInfo(currencyValueRequest, responseExchangeRate);
         currencyRequestInfoRepository.save(currencyRequestInfoEntity);
     }
 
@@ -48,6 +44,15 @@ public class CurrencyRequestInfoServiceImpl implements CurrencyRequestInfoServic
                 .map(currencyRequestInfoMapper::currencyRequestInfoEntityToDto)
                 .collect(Collectors.toList());
         return new PageImpl<>(mappedPageContent, pageable, mappedPageContent.size());
+    }
+
+    private CurrencyRequestInfoEntity buildFullCurrencyRequestInfo(CurrencyValueRequest currencyValueRequest,
+                                                                   BigDecimal responseExchangeRate) {
+        return CurrencyRequestInfoEntity.builder()
+                .currency(currencyValueRequest.getCurrency())
+                .requestAuthor(currencyValueRequest.getRequestAuthor())
+                .value(responseExchangeRate)
+                .build();
     }
 
 }

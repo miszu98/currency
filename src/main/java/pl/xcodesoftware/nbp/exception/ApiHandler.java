@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import pl.xcodesoftware.nbp.exception.dto.ExceptionResponse;
 
 import java.sql.SQLException;
@@ -22,6 +23,12 @@ public class ApiHandler {
 
     @ExceptionHandler(ExchangeRateValidationException.class)
     public ResponseEntity<ExceptionResponse> handleExchangeRateValidationException(ExchangeRateValidationException exception) {
+        log.debug("Thrown exception: {0}", exception);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(buildExceptionResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(WebClientResponseException.class)
+    public ResponseEntity<ExceptionResponse> handleWebClientResponseException(WebClientResponseException exception) {
         log.debug("Thrown exception: {0}", exception);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(buildExceptionResponse(exception.getMessage()));
     }

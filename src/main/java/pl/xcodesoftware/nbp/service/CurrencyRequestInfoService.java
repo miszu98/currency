@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 public interface CurrencyRequestInfoService {
 
-    void saveRequest(CurrencyValueRequest currencyValueRequest, BigDecimal responseValue);
+    void saveRequest(CurrencyValueRequest currencyValueRequest, BigDecimal responseExchangeRate);
 
     Page<CurrencyRequestInfoDTO> getCurrencyRequestHistory(Pageable pageable);
 
