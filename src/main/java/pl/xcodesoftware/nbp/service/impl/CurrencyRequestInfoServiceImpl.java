@@ -30,7 +30,6 @@ public class CurrencyRequestInfoServiceImpl implements CurrencyRequestInfoServic
     @Transactional
     public void saveRequest(CurrencyValueRequest currencyValueRequest, BigDecimal responseValue) {
         log.info("Saving request for {}", currencyValueRequest.getRequestAuthor());
-        // todo data validation
         CurrencyRequestInfoEntity currencyRequestInfoEntity = CurrencyRequestInfoEntity.builder()
                 .currency(currencyValueRequest.getCurrency())
                 .requestAuthor(currencyValueRequest.getRequestAuthor())
