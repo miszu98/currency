@@ -2,76 +2,15 @@
 <html>
     <head>
         <title>Currency Exchange Rate Application</title>
-        <link  rel="stylesheet" href="css/index.css">
-        <script src="js/initAction.js"></script>
         <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/index.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            var app = angular.module('currencyExchangeRateApp', []);
-            app.controller('currencyExchangeRateController', function($scope, currencyExchangeRateService) {
-                $scope.requestAuthor;
-                $scope.currency;
-                $scope.itemsPerPage = 3;
-                $scope.currentPage = -1;
-
-                $scope.getCurrencyRequests = function(page, size) {
-                    currencyExchangeRateService.getCurrencyRequests(page, size).then(
-                        function successCallback(response) {
-                            $scope.currenciesData = response.data;
-                        },
-                        function errorCallback(response) {
-                            alert("API Doesn't response")
-                        });
-                }
-
-                $scope.getCurrentExchangeRate = function () {
-                    currencyExchangeRateService.getCurrentCurrencyExchangeRate($scope.currency, $scope.requestAuthor).then(
-                        function successCallback(response) {
-                            alert("Exchange rate for: " + currencyCode + " is " + response.value);
-                        },
-                        function errorCallback(response) {
-                            alert(response.data.errorMessage);
-                        }
-                    )
-                    this.updateData(0)
-                }
-
-                $scope.formatDate = function(inputDate) {
-                    const date = new Date(inputDate);
-                    const year = date.getFullYear().toString().padStart(4, '0');
-                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                    const day = date.getDate().toString().padStart(2, '0');
-                    const hours = date.getHours().toString().padStart(2, '0');
-                    const minutes = date.getMinutes().toString().padStart(2, '0');
-                    const seconds = date.getSeconds().toString().padStart(2, '0');
-                    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                }
-
-                $scope.changeItemsPerPage = function() {
-                    $scope.currentPage = 0;
-                    this.getCurrencyRequests($scope.currentPage, $scope.itemsPerPage)
-                };
-
-                $scope.updateData = function(page) {
-                    $scope.currentPage = page;
-                    this.getCurrencyRequests($scope.currentPage, $scope.itemsPerPage);
-                }
-            });
-            app.service('currencyExchangeRateService', function($http) {
-                const currencyExchangeRateApiBaseUrl = 'http://localhost:8080/api/v1/currencies/';
-                this.getCurrencyRequests = function(page, size) {
-                    return $http.get(currencyExchangeRateApiBaseUrl + "requests?page=" + page + "&size=" + size + "&sort=date,desc");
-                }
-                this.getCurrentCurrencyExchangeRate = function(currencyCode, authorRequest) {
-                    return $http.post(currencyExchangeRateApiBaseUrl + "get-current-currency-value", {
-                        "currency": currencyCode,
-                        "requestAuthor": authorRequest
-                    });
-                }
-            });
-        </script>
+        <script src="js/initAction.js"></script>
+        <script src="js/currencyExchangeRateApp.js"></script>
+        <script src="js/currencyExchangeRateController.js"></script>
+        <script src="js/currencyExchangeRateService.js"></script>
     </head>
     <body onload="initData()" ng-app="currencyExchangeRateApp">
         <div>
