@@ -1,0 +1,149 @@
+<!Doctype html>
+<html>
+    <head>
+        <title>Currency Exchange Rate Application</title>
+        <link  rel="stylesheet" href="css/index.css">
+        <script src="js/initAction.js"></script>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            var app = angular.module('currencyExchangeRateApp', []);
+            app.controller('currencyExchangeRateController', function($scope, currencyExchangeRateService) {
+                $scope.requestAuthor;
+                $scope.currency;
+                $scope.itemsPerPage = 3;
+                $scope.currentPage = -1;
+
+                $scope.getCurrencyRequests = function(page, size) {
+                    currencyExchangeRateService.getCurrencyRequests(page, size).then(
+                        function successCallback(response) {
+                            $scope.response = response.data;
+                        },
+                        function errorCallback(response) {
+                            alert("API Doesn't response")
+                        });
+                }
+
+                $scope.getCurrentExchangeRate = function () {
+                    currencyExchangeRateService.getCurrentCurrencyExchangeRate($scope.currency, $scope.requestAuthor).then(
+                        function successCallback(response) {
+                            alert("Exchange rate for: " + currencyCode + " is " + response.value);
+                        },
+                        function errorCallback(response) {
+                            alert(response.data.errorMessage);
+                        }
+                    )
+                }
+
+                $scope.formatDate = function(inputDate) {
+                    const date = new Date(inputDate);
+                    const year = date.getFullYear().toString().padStart(4, '0');
+                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const day = date.getDate().toString().padStart(2, '0');
+                    const hours = date.getHours().toString().padStart(2, '0');
+                    const minutes = date.getMinutes().toString().padStart(2, '0');
+                    const seconds = date.getSeconds().toString().padStart(2, '0');
+                    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                }
+
+                $scope.changeItemsPerPage = function() {
+                    $scope.currentPage = 0;
+                    this.getCurrencyRequests($scope.currentPage, $scope.itemsPerPage)
+                };
+
+                $scope.updateData = function(page) {
+                    $scope.currentPage = page;
+                    this.getCurrencyRequests($scope.currentPage, $scope.itemsPerPage);
+                }
+            });
+            app.service('currencyExchangeRateService', function($http) {
+                const currencyExchangeRateApiBaseUrl = 'http://localhost:8080/api/v1/currencies/';
+                this.getCurrencyRequests = function(page, size) {
+                    return $http.get(currencyExchangeRateApiBaseUrl + "requests?page=" + page + "&size=" + size);
+                }
+                this.getCurrentCurrencyExchangeRate = function(currencyCode, authorRequest) {
+                    return $http.post(currencyExchangeRateApiBaseUrl + "get-current-currency-value", {
+                        "currency": currencyCode,
+                        "requestAuthor": authorRequest
+                    });
+                }
+            });
+        </script>
+    </head>
+    <body onload="initData()" ng-app="currencyExchangeRateApp">
+        <div>
+            <svg viewBox="0 0 500 90">
+                <path d="M 0 50 C 150 150 300 0 500 80 L 500 0 L 0 0" fill="#9A1750"></path>
+                <path d="M 0 50 C 150 150 330 -30 500 50 L 500 0 L 0 0" fill="#5D001E" opacity="0.8"></path>
+                <path d="M 0 50 C 215 150 250 0 500 100 L 500 0 L 0 0" fill="#E3AFBC" opacity="0.2"></path>
+                <text x="20" y="35" class="appName">Currency Application</text>
+                <text x="20" y="45" class="appShortDescription">Here you can search current currency exchange rate</text>
+            </svg>
+        </div>
+        <div ng-controller="currencyExchangeRateController">
+            <div class="main">
+                <div class="currencyForm">
+                    <div class="container mt-5">
+                        <form name="myForm" ng-submit="getCurrentExchangeRate()" class="row d-flex align-items-center">
+                            <div class="col-md-6 form-group">
+                                <label for="currency">Currency:</label>
+                                <input type="text" class="form-control" id="currency" name="currency" ng-model="currency" ng-required="true" ng-minlength="3" ng-maxlength="3" />
+                                <span class="error" ng-show="myForm.currency.$error.required">Field is required.</span>
+                                <span class="error" ng-show="myForm.currency.$error.minlength">Field must contain at least 3 characters.</span>
+                                <span class="error" ng-show="myForm.currency.$error.maxlength">Field cannot contain more than 3 characters</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="requestAuthor">Request Author:</label>
+                                <input type="text" class="form-control" id="requestAuthor" name="requestAuthor" ng-model="requestAuthor" ng-required="true" />
+                                <span class="error" ng-show="myForm.requestAuthor.$error.required">Field is required.</span>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary" ng-disabled="myForm.$invalid">Execute</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container mt-5">
+                <div class="table-responsive mx-auto" >
+                    <table class="table table-striped">
+                        <tr>
+                            <th scope="col">Currency</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Request Author</th>
+                            <th scope="col">Datetime</th>
+                        </tr>
+                        <tbody>
+                        <tr ng-repeat="x in response.content">
+                            <td>{{ x.currency }}</td>
+                            <td>{{ x.value }}</td>
+                            <td>{{ x.requestAuthor }}</td>
+                            <td>{{ formatDate(x.date) }}</td>
+                        </tr>
+                        <tr ng-if="response === undefined">
+                            <td colspan="4" class="text-center">No data</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-2">
+                    <button class="btn btn-primary" ng-click="updateData(0)">First</button>
+                    <button class="btn btn-primary" id="prevPage" ng-disabled="currentPage === -1 || response.first === true" ng-click="updateData(currentPage - 1)">Previous</button>
+                    <span ng-if="response !== undefined">Page {{ currentPage + 1 }} of {{ response.totalPages }}</span>
+                    <button class="btn btn-primary" id="nextPage" ng-disabled="response.last === true" ng-click="updateData(currentPage + 1)">Next</button>
+                    <button class="btn btn-primary" ng-click="updateData(response.totalPages - 1)">Last</button>
+                </div>
+                <div class="mt-2" style="width: 140px">
+                    <label for="itemsPerPage">Items per page:</label>
+                    <select id="itemsPerPage" class="form-control" ng-model="itemsPerPage" ng-change="changeItemsPerPage()">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

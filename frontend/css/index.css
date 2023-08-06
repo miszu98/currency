@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Kanit:wght@300;500;600&family=Montserrat:wght@300&family=Quicksand:wght@300&display=swap');
+
+body {
+    background-color: #E3E2DF !important;
+    font-family: 'Josefin Sans', sans-serif !important;
+}
+
+table, th , td {
+    border-collapse: collapse;
+    padding: 5px;
+    font-size: 19px;
+}
+
+table td {
+    background-color: #eaeaea;
+}
+
+table th {
+    color: white;
+}
+
+table tr th{
+    margin-right: 50px;
+    background-color: #9A1750 !important;
+}
+
+.error {
+    color: red;
+}
+
+.appName {
+    font-weight: bold;
+    fill: white;
+}
+
+.appShortDescription {
+    font-size: 5px;
+    fill: white;
+}
+
+.main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.currencyForm {
+    width: 100%;
+}
+
+label {
+    font-weight: bold;
+    font-size: 19px;
+}
+
+.btn-primary {
+    font-size: 19px !important;
+    background-color: #9A1750 !important;
+    border-color: #9A1750 !important;
+}
+
+.btn-primary:active {
+    background-color: #9A1750 !important;
+    border-color: #9A1750 !important;
+}
