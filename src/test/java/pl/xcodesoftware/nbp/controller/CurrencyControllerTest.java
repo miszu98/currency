@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static pl.xcodesoftware.nbp.utils.MockDataGeneratorUtil.*;
 
@@ -45,14 +46,15 @@ public class CurrencyControllerTest extends IntegrationTestConfiguration {
     void shouldSaveCurrencyRequestHistoricRecord() throws Exception {
         final CurrencyValueRequest currencyValueRequest = getMockCurrencyValueRequestExample();
         final String currencyValueRequestJson = objectMapper.writeValueAsString(currencyValueRequest);
-        final ExchangeRateResponse exchangeRateResponse = getMockExchangeRateResponse();
+        final ExchangeRateResponse ExchangeRateResponse = getMockExchangeRateResponse();
         final String currencyCode = "PLN";
 
-        when(nbpService.getExchangeRate(currencyCode)).thenReturn(exchangeRateResponse);
+        when(nbpService.getExchangeRateByCurrencyCode(currencyCode)).thenReturn(ExchangeRateResponse);
 
         mockMvc.perform(post("/api/v1/currencies/get-current-currency-value")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(currencyValueRequestJson))
+                .andDo(print())
                 .andExpectAll(status().isOk(),
                         jsonPath("$.value").value("4.2"));
 
@@ -66,6 +68,7 @@ public class CurrencyControllerTest extends IntegrationTestConfiguration {
         mockMvc.perform(get("/api/v1/currencies/requests")
                 .queryParam("page", String.valueOf(pageRequest.getPageNumber()))
                 .queryParam("size", String.valueOf(pageRequest.getPageSize())))
+                .andDo(print())
                 .andExpectAll(status().isOk(),
                         jsonPath("$.content").isNotEmpty(),
                         jsonPath("$.content[0].value").value("4.2"),

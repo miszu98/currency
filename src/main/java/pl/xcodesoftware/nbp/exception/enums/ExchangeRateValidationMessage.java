@@ -1,8 +1,8 @@
-package pl.xcodesoftware.nbp.exception.dto;
+package pl.xcodesoftware.nbp.exception.enums;
 
 public enum ExchangeRateValidationMessage {
 
-    EXCHANGE_RATE_IS_NULL("Exchange rate is null");
+    CURRENCY_NOT_FOUND("Currency not found");
 
     private String message;
 

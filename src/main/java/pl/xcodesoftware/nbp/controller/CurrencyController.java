@@ -1,5 +1,6 @@
 package pl.xcodesoftware.nbp.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,13 +17,14 @@ import pl.xcodesoftware.nbp.service.facade.CurrencyFacade;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/currencies")
+@CrossOrigin(origins = "http://localhost:63342") // for testing purpose
 public class CurrencyController {
 
     private final CurrencyFacade currencyFacade;
     private final CurrencyRequestInfoService currencyRequestInfoService;
 
     @PostMapping("/get-current-currency-value")
-    public ResponseEntity<ExchangeRateResponse> getCurrentCurrencyValue(@RequestBody CurrencyValueRequest currencyValueRequest) {
+    public ResponseEntity<ExchangeRateResponse> getCurrentCurrencyValue(@RequestBody CurrencyValueRequest currencyValueRequest) throws JsonProcessingException {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(currencyFacade.getExchangeRateByCodeAndSave(currencyValueRequest));
     }

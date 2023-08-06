@@ -11,25 +11,26 @@ import pl.xcodesoftware.nbp.exception.dto.ExceptionResponse;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-@Slf4j
 @RestControllerAdvice
 public class ApiHandler {
 
     @ExceptionHandler(SQLException.class)
     public ResponseEntity<ExceptionResponse> handleSqlException(SQLException exception) {
-        log.debug("Thrown exception: {0}", exception);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(buildExceptionResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(ExchangeRateValidationException.class)
     public ResponseEntity<ExceptionResponse> handleExchangeRateValidationException(ExchangeRateValidationException exception) {
-        log.debug("Thrown exception: {0}", exception);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(buildExceptionResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<ExceptionResponse> handleWebClientResponseException(WebClientResponseException exception) {
-        log.debug("Thrown exception: {0}", exception);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(buildExceptionResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(CurrencyExchangeRateRequestValidationException.class)
+    public ResponseEntity<ExceptionResponse> handleCurrencyExchangeRateRequestValidationException(CurrencyExchangeRateRequestValidationException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(buildExceptionResponse(exception.getMessage()));
     }
 

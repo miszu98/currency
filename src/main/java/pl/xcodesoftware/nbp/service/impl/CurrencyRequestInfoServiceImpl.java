@@ -43,7 +43,7 @@ public class CurrencyRequestInfoServiceImpl implements CurrencyRequestInfoServic
         List<CurrencyRequestInfoDTO> mappedPageContent = pageContent.stream()
                 .map(currencyRequestInfoMapper::currencyRequestInfoEntityToDto)
                 .collect(Collectors.toList());
-        return new PageImpl<>(mappedPageContent, pageable, mappedPageContent.size());
+        return new PageImpl<>(mappedPageContent, pageable, currencyRequestInfoEntityPage.getTotalElements());
     }
 
     private CurrencyRequestInfoEntity buildFullCurrencyRequestInfo(CurrencyValueRequest currencyValueRequest,
