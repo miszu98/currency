@@ -22,7 +22,8 @@ public class CurrencyFacade {
     private final CurrencyRequestValidationProcessor currencyRequestValidationProcessor;
 
     @Transactional
-    public ExchangeRateResponseDTO getExchangeRateByCodeAndSave(CurrencyValueRequestDTO currencyValueRequestDTO) throws JsonProcessingException {
+    public ExchangeRateResponseDTO getExchangeRateByCodeAndSave(CurrencyValueRequestDTO currencyValueRequestDTO)
+            throws JsonProcessingException {
         currencyRequestValidationProcessor.validate(currencyValueRequestDTO);
         ExchangeRateResponseDTO exchangeRate = nbpService.getExchangeRateByCurrencyCode(currencyValueRequestDTO.getCurrency());
         currencyRequestInfoService.saveRequest(currencyValueRequestDTO, exchangeRate.getValue());
