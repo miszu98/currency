@@ -30,20 +30,25 @@ public class CurrencyRequestInfoServiceImpl implements CurrencyRequestInfoServic
     @Transactional
     public void saveRequest(CurrencyValueRequestDTO currencyValueRequestDTO, BigDecimal responseExchangeRate) {
         log.info("Saving request for {}", currencyValueRequestDTO.getRequestAuthor());
-        CurrencyRequestInfoEntity currencyRequestInfoEntity = buildFullCurrencyRequestInfo(currencyValueRequestDTO, responseExchangeRate);
+        CurrencyRequestInfoEntity currencyRequestInfoEntity = buildFullCurrencyRequestInfo(currencyValueRequestDTO,
+                responseExchangeRate);
         currencyRequestInfoRepository.save(currencyRequestInfoEntity);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<CurrencyRequestInfoDTO> getCurrencyRequestHistory(Pageable pageable) {
-        log.info("Get ");
+        log.info("Looking for currencies requests");
         Page<CurrencyRequestInfoEntity> currencyRequestInfoEntityPage = currencyRequestInfoRepository.findAll(pageable);
         List<CurrencyRequestInfoEntity> pageContent = currencyRequestInfoEntityPage.getContent();
-        List<CurrencyRequestInfoDTO> mappedPageContent = pageContent.stream()
+        List<CurrencyRequestInfoDTO> mappedPageContent = transformCurrencyRequestInfoEntitiesToDTO(pageContent);
+        return new PageImpl<>(mappedPageContent, pageable, currencyRequestInfoEntityPage.getTotalElements());
+    }
+
+    private List<CurrencyRequestInfoDTO> transformCurrencyRequestInfoEntitiesToDTO(List<CurrencyRequestInfoEntity> currencyRequestInfoEntities) {
+        return currencyRequestInfoEntities.stream()
                 .map(currencyRequestInfoMapper::currencyRequestInfoEntityToDto)
                 .collect(Collectors.toList());
-        return new PageImpl<>(mappedPageContent, pageable, currencyRequestInfoEntityPage.getTotalElements());
     }
 
     private CurrencyRequestInfoEntity buildFullCurrencyRequestInfo(CurrencyValueRequestDTO currencyValueRequestDTO,
