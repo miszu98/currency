@@ -33,6 +33,11 @@ public class ApiHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(buildExceptionResponse(exception.getMessage()));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(buildExceptionResponse(exception.getMessage()));
+    }
+
     private ExceptionResponse buildExceptionResponse(String errorMessage) {
         return new ExceptionResponse(errorMessage, LocalDateTime.now());
     }

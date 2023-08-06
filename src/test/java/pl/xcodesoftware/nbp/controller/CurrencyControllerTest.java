@@ -14,13 +14,14 @@ import pl.xcodesoftware.nbp.entity.CurrencyRequestInfoEntity;
 import pl.xcodesoftware.nbp.repository.CurrencyRequestInfoRepository;
 import pl.xcodesoftware.nbp.service.NbpService;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static pl.xcodesoftware.nbp.exception.enums.CurrencyRequestValidationMessage.CURRENCY_CODE_IS_NULL_OR_EMPTY_OR_BLANK;
+import static pl.xcodesoftware.nbp.exception.enums.CurrencyRequestValidationMessage.REQUEST_AUTHOR_IS_NULL_OR_EMPTY_OR_BLANK;
 import static pl.xcodesoftware.nbp.utils.MockDataGeneratorUtil.*;
 
 public class CurrencyControllerTest extends IntegrationTestConfiguration {
@@ -46,10 +47,10 @@ public class CurrencyControllerTest extends IntegrationTestConfiguration {
     void shouldSaveCurrencyRequestHistoricRecord() throws Exception {
         final CurrencyValueRequestDTO currencyValueRequestDTO = getMockCurrencyValueRequestExample();
         final String currencyValueRequestJson = objectMapper.writeValueAsString(currencyValueRequestDTO);
-        final ExchangeRateResponseDTO ExchangeRateResponseDTO = getMockExchangeRateResponse();
+        final ExchangeRateResponseDTO exchangeRateResponseDTO = getMockExchangeRateResponse();
         final String currencyCode = "PLN";
 
-        when(nbpService.getExchangeRateByCurrencyCode(currencyCode)).thenReturn(ExchangeRateResponseDTO);
+        when(nbpService.getExchangeRateByCurrencyCode(currencyCode)).thenReturn(exchangeRateResponseDTO);
 
         mockMvc.perform(post("/api/v1/currencies/get-current-currency-value")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,4 +76,41 @@ public class CurrencyControllerTest extends IntegrationTestConfiguration {
                         jsonPath("$.content[0].currency").value("PLN"),
                         jsonPath("$.content[0].requestAuthor").value("Michał Małek"));
     }
+
+    @Test
+    void shouldTryToGetCurrencyExchangeRateAndGetValidatedResponseWhenRequestAuthorIsNull() throws Exception {
+        final CurrencyValueRequestDTO currencyValueRequestDTO = getMockCurrencyValueRequestExample();
+        currencyValueRequestDTO.setRequestAuthor(null);
+        final String currencyValueRequestJson = objectMapper.writeValueAsString(currencyValueRequestDTO);
+        final ExchangeRateResponseDTO exchangeRateResponseDTO = getMockExchangeRateResponse();
+        final String currencyCode = "PLN";
+
+        when(nbpService.getExchangeRateByCurrencyCode(currencyCode)).thenReturn(exchangeRateResponseDTO);
+
+        mockMvc.perform(post("/api/v1/currencies/get-current-currency-value")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(currencyValueRequestJson))
+                .andDo(print())
+                .andExpectAll(status().isConflict(),
+                        jsonPath("$.errorMessage").value(REQUEST_AUTHOR_IS_NULL_OR_EMPTY_OR_BLANK.getMessage()));
+    }
+
+    @Test
+    void shouldTryToGetCurrencyExchangeRateAndGetValidatedResponseWhenCurrencyIsEmpty() throws Exception {
+        final CurrencyValueRequestDTO currencyValueRequestDTO = getMockCurrencyValueRequestExample();
+        currencyValueRequestDTO.setCurrency("");
+        final String currencyValueRequestJson = objectMapper.writeValueAsString(currencyValueRequestDTO);
+        final ExchangeRateResponseDTO exchangeRateResponseDTO = getMockExchangeRateResponse();
+        final String currencyCode = "PLN";
+
+        when(nbpService.getExchangeRateByCurrencyCode(currencyCode)).thenReturn(exchangeRateResponseDTO);
+
+        mockMvc.perform(post("/api/v1/currencies/get-current-currency-value")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(currencyValueRequestJson))
+                .andDo(print())
+                .andExpectAll(status().isConflict(),
+                        jsonPath("$.errorMessage").value(CURRENCY_CODE_IS_NULL_OR_EMPTY_OR_BLANK.getMessage()));
+    }
+
 }
