@@ -1,7 +1,7 @@
 package pl.xcodesoftware.nbp.validators;
 
 import org.springframework.stereotype.Component;
-import pl.xcodesoftware.nbp.dto.CurrencyValueRequest;
+import pl.xcodesoftware.nbp.dto.CurrencyValueRequestDTO;
 import pl.xcodesoftware.nbp.validators.validators.CurrencyCodeIsNullOrEmptyOrBlankValidator;
 import pl.xcodesoftware.nbp.validators.validators.CurrencyCodeLengthValidator;
 import pl.xcodesoftware.nbp.validators.validators.RequestAuthorIsNullOrEmptyOrBlankValidator;
@@ -18,7 +18,7 @@ public class CurrencyRequestValidationProcessor {
         );
     }
 
-    public void validate(CurrencyValueRequest currencyValueRequest) {
-        this.currencyRequestValidator.validate(currencyValueRequest);
+    public void validate(CurrencyValueRequestDTO currencyValueRequestDTO) {
+        this.currencyRequestValidator.validate(currencyValueRequestDTO);
     }
 }

@@ -3,8 +3,8 @@ package pl.xcodesoftware.nbp.utils;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.domain.PageRequest;
 import pl.xcodesoftware.nbp.dto.CurrencyRequestInfoDTO;
-import pl.xcodesoftware.nbp.dto.CurrencyValueRequest;
-import pl.xcodesoftware.nbp.dto.ExchangeRateResponse;
+import pl.xcodesoftware.nbp.dto.CurrencyValueRequestDTO;
+import pl.xcodesoftware.nbp.dto.ExchangeRateResponseDTO;
 import pl.xcodesoftware.nbp.entity.CurrencyRequestInfoEntity;
 
 import java.math.BigDecimal;
@@ -13,8 +13,8 @@ import java.util.List;
 @UtilityClass
 public class MockDataGeneratorUtil {
 
-    public static CurrencyValueRequest getMockCurrencyValueRequestExample() {
-        return CurrencyValueRequest.builder()
+    public static CurrencyValueRequestDTO getMockCurrencyValueRequestExample() {
+        return CurrencyValueRequestDTO.builder()
                 .currency("PLN")
                 .requestAuthor("Michał Małek")
                 .build();
@@ -48,8 +48,8 @@ public class MockDataGeneratorUtil {
                 .value(getMockExchangeRate()).build();
     }
 
-    public static ExchangeRateResponse getMockExchangeRateResponse() {
-        return ExchangeRateResponse.builder()
+    public static ExchangeRateResponseDTO getMockExchangeRateResponse() {
+        return ExchangeRateResponseDTO.builder()
                 .value(getMockExchangeRate())
                 .build();
     }

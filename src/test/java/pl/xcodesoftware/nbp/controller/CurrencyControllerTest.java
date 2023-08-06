@@ -8,8 +8,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import pl.xcodesoftware.nbp.configuration.IntegrationTestConfiguration;
-import pl.xcodesoftware.nbp.dto.CurrencyValueRequest;
-import pl.xcodesoftware.nbp.dto.ExchangeRateResponse;
+import pl.xcodesoftware.nbp.dto.CurrencyValueRequestDTO;
+import pl.xcodesoftware.nbp.dto.ExchangeRateResponseDTO;
 import pl.xcodesoftware.nbp.entity.CurrencyRequestInfoEntity;
 import pl.xcodesoftware.nbp.repository.CurrencyRequestInfoRepository;
 import pl.xcodesoftware.nbp.service.NbpService;
@@ -44,12 +44,12 @@ public class CurrencyControllerTest extends IntegrationTestConfiguration {
 
     @Test
     void shouldSaveCurrencyRequestHistoricRecord() throws Exception {
-        final CurrencyValueRequest currencyValueRequest = getMockCurrencyValueRequestExample();
-        final String currencyValueRequestJson = objectMapper.writeValueAsString(currencyValueRequest);
-        final ExchangeRateResponse ExchangeRateResponse = getMockExchangeRateResponse();
+        final CurrencyValueRequestDTO currencyValueRequestDTO = getMockCurrencyValueRequestExample();
+        final String currencyValueRequestJson = objectMapper.writeValueAsString(currencyValueRequestDTO);
+        final ExchangeRateResponseDTO ExchangeRateResponseDTO = getMockExchangeRateResponse();
         final String currencyCode = "PLN";
 
-        when(nbpService.getExchangeRateByCurrencyCode(currencyCode)).thenReturn(ExchangeRateResponse);
+        when(nbpService.getExchangeRateByCurrencyCode(currencyCode)).thenReturn(ExchangeRateResponseDTO);
 
         mockMvc.perform(post("/api/v1/currencies/get-current-currency-value")
                         .contentType(MediaType.APPLICATION_JSON)

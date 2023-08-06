@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.xcodesoftware.nbp.dto.CurrencyRequestInfoDTO;
-import pl.xcodesoftware.nbp.dto.CurrencyValueRequest;
+import pl.xcodesoftware.nbp.dto.CurrencyValueRequestDTO;
 import pl.xcodesoftware.nbp.entity.CurrencyRequestInfoEntity;
 import pl.xcodesoftware.nbp.mapper.CurrencyRequestInfoMapper;
 import pl.xcodesoftware.nbp.repository.CurrencyRequestInfoRepository;
@@ -28,9 +28,9 @@ public class CurrencyRequestInfoServiceImpl implements CurrencyRequestInfoServic
 
     @Override
     @Transactional
-    public void saveRequest(CurrencyValueRequest currencyValueRequest, BigDecimal responseExchangeRate) {
-        log.info("Saving request for {}", currencyValueRequest.getRequestAuthor());
-        CurrencyRequestInfoEntity currencyRequestInfoEntity = buildFullCurrencyRequestInfo(currencyValueRequest, responseExchangeRate);
+    public void saveRequest(CurrencyValueRequestDTO currencyValueRequestDTO, BigDecimal responseExchangeRate) {
+        log.info("Saving request for {}", currencyValueRequestDTO.getRequestAuthor());
+        CurrencyRequestInfoEntity currencyRequestInfoEntity = buildFullCurrencyRequestInfo(currencyValueRequestDTO, responseExchangeRate);
         currencyRequestInfoRepository.save(currencyRequestInfoEntity);
     }
 
@@ -46,11 +46,11 @@ public class CurrencyRequestInfoServiceImpl implements CurrencyRequestInfoServic
         return new PageImpl<>(mappedPageContent, pageable, currencyRequestInfoEntityPage.getTotalElements());
     }
 
-    private CurrencyRequestInfoEntity buildFullCurrencyRequestInfo(CurrencyValueRequest currencyValueRequest,
+    private CurrencyRequestInfoEntity buildFullCurrencyRequestInfo(CurrencyValueRequestDTO currencyValueRequestDTO,
                                                                    BigDecimal responseExchangeRate) {
         return CurrencyRequestInfoEntity.builder()
-                .currency(currencyValueRequest.getCurrency())
-                .requestAuthor(currencyValueRequest.getRequestAuthor())
+                .currency(currencyValueRequestDTO.getCurrency())
+                .requestAuthor(currencyValueRequestDTO.getRequestAuthor())
                 .value(responseExchangeRate)
                 .build();
     }

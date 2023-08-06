@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import pl.xcodesoftware.nbp.dto.CurrencyValueRequest;
-import pl.xcodesoftware.nbp.dto.ExchangeRateResponse;
+import pl.xcodesoftware.nbp.dto.CurrencyValueRequestDTO;
+import pl.xcodesoftware.nbp.dto.ExchangeRateResponseDTO;
 import pl.xcodesoftware.nbp.service.CurrencyRequestInfoService;
 import pl.xcodesoftware.nbp.service.NbpService;
 import pl.xcodesoftware.nbp.validators.CurrencyRequestValidationProcessor;
@@ -22,10 +22,10 @@ public class CurrencyFacade {
     private final CurrencyRequestValidationProcessor currencyRequestValidationProcessor;
 
     @Transactional
-    public ExchangeRateResponse getExchangeRateByCodeAndSave(CurrencyValueRequest currencyValueRequest) throws JsonProcessingException {
-        currencyRequestValidationProcessor.validate(currencyValueRequest);
-        ExchangeRateResponse exchangeRate = nbpService.getExchangeRateByCurrencyCode(currencyValueRequest.getCurrency());
-        currencyRequestInfoService.saveRequest(currencyValueRequest, exchangeRate.getValue());
+    public ExchangeRateResponseDTO getExchangeRateByCodeAndSave(CurrencyValueRequestDTO currencyValueRequestDTO) throws JsonProcessingException {
+        currencyRequestValidationProcessor.validate(currencyValueRequestDTO);
+        ExchangeRateResponseDTO exchangeRate = nbpService.getExchangeRateByCurrencyCode(currencyValueRequestDTO.getCurrency());
+        currencyRequestInfoService.saveRequest(currencyValueRequestDTO, exchangeRate.getValue());
         return exchangeRate;
     }
 

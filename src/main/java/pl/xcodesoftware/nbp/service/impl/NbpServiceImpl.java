@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import pl.xcodesoftware.nbp.dto.ExchangeRateResponse;
+import pl.xcodesoftware.nbp.dto.ExchangeRateResponseDTO;
 import pl.xcodesoftware.nbp.exception.ExchangeRateValidationException;
 import pl.xcodesoftware.nbp.exception.enums.ExchangeRateValidationMessage;
 import pl.xcodesoftware.nbp.service.NbpService;
@@ -25,9 +25,9 @@ public class NbpServiceImpl implements NbpService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public ExchangeRateResponse getExchangeRateByCurrencyCode(String currencyCode) throws JsonProcessingException {
+    public ExchangeRateResponseDTO getExchangeRateByCurrencyCode(String currencyCode) throws JsonProcessingException {
         log.info("Trying connect to NBP API and get currencies exchange rates");
-        return ExchangeRateResponse.builder()
+        return ExchangeRateResponseDTO.builder()
                 .value(findExchangeRateByCurrencyCode(currencyCode)).build();
     }
 

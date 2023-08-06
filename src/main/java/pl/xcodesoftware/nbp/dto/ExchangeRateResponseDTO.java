@@ -14,7 +14,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExchangeRateResponse {
+public class ExchangeRateResponseDTO {
 
     private BigDecimal value;
 

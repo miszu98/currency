@@ -1,6 +1,6 @@
 package pl.xcodesoftware.nbp.validators;
 
-import pl.xcodesoftware.nbp.dto.CurrencyValueRequest;
+import pl.xcodesoftware.nbp.dto.CurrencyValueRequestDTO;
 
 import static java.util.Objects.nonNull;
 
@@ -17,11 +17,11 @@ public abstract class CurrencyRequestValidator {
         return first;
     }
 
-    public abstract void validate(CurrencyValueRequest currencyValueRequest);
+    public abstract void validate(CurrencyValueRequestDTO currencyValueRequestDTO);
 
-    protected void validateNext(CurrencyValueRequest currencyValueRequest) {
+    protected void validateNext(CurrencyValueRequestDTO currencyValueRequestDTO) {
         if (nonNull(nextValidator)) {
-            nextValidator.validate(currencyValueRequest);
+            nextValidator.validate(currencyValueRequestDTO);
         }
     }
 }

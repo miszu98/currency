@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CurrencyValueRequest {
+public class CurrencyValueRequestDTO {
 
     private String currency;
 

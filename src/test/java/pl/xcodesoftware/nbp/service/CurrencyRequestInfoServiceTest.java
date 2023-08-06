@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import pl.xcodesoftware.nbp.dto.CurrencyRequestInfoDTO;
-import pl.xcodesoftware.nbp.dto.CurrencyValueRequest;
+import pl.xcodesoftware.nbp.dto.CurrencyValueRequestDTO;
 import pl.xcodesoftware.nbp.entity.CurrencyRequestInfoEntity;
 import pl.xcodesoftware.nbp.mapper.CurrencyRequestInfoMapper;
 import pl.xcodesoftware.nbp.repository.CurrencyRequestInfoRepository;
@@ -43,11 +43,11 @@ public class CurrencyRequestInfoServiceTest {
 
     @Test
     void shouldSaveIncomingCurrencyRequestToDatabase() {
-        final CurrencyValueRequest currencyValueRequest = getMockCurrencyValueRequestExample();
+        final CurrencyValueRequestDTO currencyValueRequestDTO = getMockCurrencyValueRequestExample();
         final BigDecimal apiResponseExchangeRate = getMockExchangeRate();
         final CurrencyRequestInfoEntity currencyRequestInfoEntity = getMockCurrencyInfoRequestEntity();
 
-        underTest.saveRequest(currencyValueRequest, apiResponseExchangeRate);
+        underTest.saveRequest(currencyValueRequestDTO, apiResponseExchangeRate);
 
         verify(currencyRequestInfoRepository).save(argumentCaptor.capture());
 
