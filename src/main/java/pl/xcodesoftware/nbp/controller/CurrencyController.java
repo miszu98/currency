@@ -2,6 +2,7 @@ package pl.xcodesoftware.nbp.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class CurrencyController {
     private final CurrencyRequestInfoService currencyRequestInfoService;
 
     @PostMapping("/get-current-currency-value")
+    @Cacheable(value = "currency", key = "#currencyValueRequestDTO.currency")
     public ResponseEntity<ExchangeRateResponseDTO> getCurrentCurrencyValue(@RequestBody CurrencyValueRequestDTO currencyValueRequestDTO)
             throws JsonProcessingException {
         return ResponseEntity.status(HttpStatus.OK)
