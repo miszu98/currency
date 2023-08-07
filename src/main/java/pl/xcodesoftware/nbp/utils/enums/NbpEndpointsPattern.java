@@ -2,7 +2,7 @@ package pl.xcodesoftware.nbp.utils.enums;
 
 public enum NbpEndpointsPattern {
 
-    CURRENCIES_EXCHANGE_RATES("dsadasd/exchangerates/tables/A?format=json");
+    CURRENCIES_EXCHANGE_RATES("/exchangerates/tables/A?format=json");
 
     private String value;
 
