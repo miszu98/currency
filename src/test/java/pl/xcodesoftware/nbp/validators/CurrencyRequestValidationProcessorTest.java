@@ -146,5 +146,18 @@ public class CurrencyRequestValidationProcessorTest {
 
         assertEquals(CurrencyRequestValidationMessage.CURRENCY_CODE_NOT_CONTAINS_ONLY_LETTERS.getMessage(), exception.getMessage());
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"Michał", "Michał ", "romek", "romek ", "Rom123 Nowak", "Romek Now123"})
+    void shouldThrowExceptionWhenRequestAuthorHasBadName(String testRequestAuthor) {
+        final CurrencyValueRequestDTO currencyValueRequestDTO = CurrencyValueRequestDTO.builder()
+                .currency("EUR")
+                .requestAuthor(testRequestAuthor).build();
+
+        CurrencyExchangeRateRequestValidationException exception = assertThrows(CurrencyExchangeRateRequestValidationException.class,
+                () -> underTest.validate(currencyValueRequestDTO));
+
+        assertEquals(CurrencyRequestValidationMessage.REQUEST_AUTHOR_FIRST_NAME_AND_LAST_NAME_NOT_CORRECT.getMessage(), exception.getMessage());
+    }
 }
 
