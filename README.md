@@ -18,5 +18,5 @@ jako historyczne i jest wyświetlane w tabeli obok. Tabela oferuje możliwość 
 
 ## Wygląd aplikacji
 
-![Here should be image of app](https://github.com/miszu98/xCode-Software-zadanie-rekrutacyjne/blob/master/app.PNG?raw=true)
+![Here should be image of app](https://github.com/miszu98/currency/blob/master/app.PNG?raw=true)
 
