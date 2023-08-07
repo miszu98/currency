@@ -2,7 +2,7 @@ angular.module('currencyExchangeRateApp')
     .controller('currencyExchangeRateController', function($scope, currencyExchangeRateService) {
         $scope.requestAuthor;
         $scope.currency;
-        $scope.itemsPerPage = 3;
+        $scope.itemsPerPage = 5;
         $scope.currentPage = -1;
 
         $scope.getCurrencyRequests = function(page, size) {

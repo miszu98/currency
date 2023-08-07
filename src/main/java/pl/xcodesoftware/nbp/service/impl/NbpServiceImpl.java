@@ -23,6 +23,7 @@ import java.util.stream.StreamSupport;
 public class NbpServiceImpl implements NbpService {
 
     private final ObjectMapper objectMapper;
+    private final WebClient.Builder webClientBuilder;
 
     @Override
     public ExchangeRateResponseDTO getExchangeRateByCurrencyCode(String currencyCode) throws JsonProcessingException {
@@ -50,7 +51,7 @@ public class NbpServiceImpl implements NbpService {
 
     private String getCurrenciesData() {
         final String apiUrl = CurrencyApiUrlUtils.getEndpoint(NbpEndpointsPattern.CURRENCIES_EXCHANGE_RATES);
-        return WebClient.create()
+        return webClientBuilder.build()
                 .get()
                 .uri(apiUrl)
                 .retrieve()
