@@ -2,6 +2,7 @@ package pl.xcodesoftware.nbp.exception.enums;
 
 public enum CurrencyRequestValidationMessage {
     REQUEST_AUTHOR_IS_NULL_OR_EMPTY_OR_BLANK("Request author is null or empty or blank"),
+    REQUEST_AUTHOR_FIRST_NAME_AND_LAST_NAME_NOT_CORRECT("Request author should contains first name and last name started with uppercase"),
     CURRENCY_CODE_IS_NULL_OR_EMPTY_OR_BLANK("Currency code is null or empty or blank"),
     CURRENCY_CODE_BAD_LENGTH("Currency code length is less or greater than 3 chars"),
     CURRENCY_REQUEST_IS_NULL("Currency request cannot be null"),

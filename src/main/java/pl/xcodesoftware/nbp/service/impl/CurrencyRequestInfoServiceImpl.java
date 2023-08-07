@@ -29,7 +29,7 @@ public class CurrencyRequestInfoServiceImpl implements CurrencyRequestInfoServic
     @Override
     @Transactional
     public void saveRequest(CurrencyValueRequestDTO currencyValueRequestDTO, BigDecimal responseExchangeRate) {
-        log.info("Saving request for {}", currencyValueRequestDTO.getRequestAuthor());
+        log.info("Saving request for {}", currencyValueRequestDTO.getCurrency());
         CurrencyRequestInfoEntity currencyRequestInfoEntity = buildFullCurrencyRequestInfo(currencyValueRequestDTO,
                 responseExchangeRate);
         currencyRequestInfoRepository.save(currencyRequestInfoEntity);

@@ -17,6 +17,9 @@ import pl.xcodesoftware.nbp.utils.enums.NbpEndpointsPattern;
 import java.math.BigDecimal;
 import java.util.stream.StreamSupport;
 
+import static java.util.Objects.isNull;
+import static pl.xcodesoftware.nbp.exception.enums.ExchangeRateValidationMessage.EXCHANGE_RATE_IS_NULL;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -37,16 +40,18 @@ public class NbpServiceImpl implements NbpService {
         JsonNode rootNode = objectMapper.readTree(currenciesData);
         JsonNode exchangeRatesNode = rootNode.get(0).get("rates");
         JsonNode foundCurrencyExchangeRate = filterJsonNodesByCurrencyCode(currencyCode, exchangeRatesNode);
+        if (isNull(foundCurrencyExchangeRate)) {
+            throw new ExchangeRateValidationException(EXCHANGE_RATE_IS_NULL);
+        }
         return foundCurrencyExchangeRate.decimalValue();
     }
 
     private JsonNode filterJsonNodesByCurrencyCode(String currencyCode, JsonNode exchangeRatesNode) {
         return StreamSupport.stream(exchangeRatesNode.spliterator(), false)
                 .filter(currency -> currency.get("code").asText().equals(currencyCode))
-                .map(currency -> currency.get("mid"))
                 .findFirst().orElseThrow(
                         () -> new ExchangeRateValidationException(ExchangeRateValidationMessage.CURRENCY_NOT_FOUND)
-                );
+                ).get("mid");
     }
 
     private String getCurrenciesData() {

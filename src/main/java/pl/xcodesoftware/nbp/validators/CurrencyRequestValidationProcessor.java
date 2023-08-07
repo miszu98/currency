@@ -12,6 +12,7 @@ public class CurrencyRequestValidationProcessor {
         this.currencyRequestValidator = CurrencyRequestValidator.link(
                 new CurrencyValueRequestIsNullValidator(),
                 new RequestAuthorIsNullOrEmptyOrBlankValidator(),
+                new RequestAuthorFirstNameAndLastNameValidator(),
                 new CurrencyCodeIsNullOrEmptyOrBlankValidator(),
                 new CurrencyCodeLengthValidator(),
                 new CurrencyCodeContainsOnlyLettersValidator()

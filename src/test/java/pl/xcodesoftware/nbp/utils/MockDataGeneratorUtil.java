@@ -61,6 +61,10 @@ public class MockDataGeneratorUtil {
         return "[{\"table\":\"A\",\"no\":\"150/A/NBP/2023\",\"effectiveDate\":\"2023-08-04\",\"rates\":[{\"currency\":\"bat (Tajlandia)\",\"code\":\"THB\",\"mid\":0.1168},{\"currency\":\"dolar amerykański\",\"code\":\"USD\",\"mid\":4.062}]}]";
     }
 
+    public static String getMockCurrenciesDataWithNullCurrencyExchangeRate() {
+        return "[{\"table\":\"A\",\"no\":\"150/A/NBP/2023\",\"effectiveDate\":\"2023-08-04\",\"rates\":[{\"currency\":\"bat (Tajlandia)\",\"code\":\"THB\",\"mid\":0.1168},{\"currency\":\"dolar amerykański\",\"code\":\"USD\"}]}]";
+    }
+
     public static ArrayNode getMockJsonNode() {
         ObjectNode objectNode = new ObjectNode(JsonNodeFactory.instance);
         objectNode.put("table", "A");
@@ -79,6 +83,33 @@ public class MockDataGeneratorUtil {
         rate2.put("currency", "dolar amerykański");
         rate2.put("code", "USD");
         rate2.put("mid", 4.0620);
+        ratesArray.add(rate2);
+
+        objectNode.set("rates", ratesArray);
+
+        ArrayNode arrayNode = JsonNodeFactory.instance.arrayNode();
+        arrayNode.add(objectNode);
+
+        return arrayNode;
+    }
+
+    public static ArrayNode getMockJsonNodeWithNullCurrencyExchangeRate() {
+        ObjectNode objectNode = new ObjectNode(JsonNodeFactory.instance);
+        objectNode.put("table", "A");
+        objectNode.put("no", "150/A/NBP/2023");
+        objectNode.put("effectiveDate", "2023-08-04");
+
+        ArrayNode ratesArray = new ArrayNode(JsonNodeFactory.instance);
+
+        ObjectNode rate1 = new ObjectNode(JsonNodeFactory.instance);
+        rate1.put("currency", "bat (Tajlandia)");
+        rate1.put("code", "THB");
+        rate1.put("mid", 0.1168);
+        ratesArray.add(rate1);
+
+        ObjectNode rate2 = new ObjectNode(JsonNodeFactory.instance);
+        rate2.put("currency", "dolar amerykański");
+        rate2.put("code", "USD");
         ratesArray.add(rate2);
 
         objectNode.set("rates", ratesArray);

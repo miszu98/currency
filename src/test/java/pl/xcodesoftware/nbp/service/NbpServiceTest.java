@@ -23,8 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static pl.xcodesoftware.nbp.exception.enums.ExchangeRateValidationMessage.CURRENCY_NOT_FOUND;
-import static pl.xcodesoftware.nbp.utils.MockDataGeneratorUtil.getMockCurrenciesData;
-import static pl.xcodesoftware.nbp.utils.MockDataGeneratorUtil.getMockJsonNode;
+import static pl.xcodesoftware.nbp.exception.enums.ExchangeRateValidationMessage.EXCHANGE_RATE_IS_NULL;
+import static pl.xcodesoftware.nbp.utils.MockDataGeneratorUtil.*;
 
 @ExtendWith(MockitoExtension.class)
 public class NbpServiceTest {
@@ -84,6 +84,24 @@ public class NbpServiceTest {
         ExchangeRateResponseDTO exchangeRateResponseDTO = assertDoesNotThrow(() -> underTest.getExchangeRateByCurrencyCode(currencyCode));
 
         assertEquals(new BigDecimal("4.062"), exchangeRateResponseDTO.getValue());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenExternalNBPApiReturnNullAsExchangeRate() throws JsonProcessingException {
+        final String currencyCode = "USD";
+
+        when(objectMapper.readTree(any(String.class))).thenReturn(getMockJsonNodeWithNullCurrencyExchangeRate());
+        when(webClientBuilder.build()).thenReturn(webClientMock);
+        when(webClientMock.get()).thenReturn(requestHeadersUriSpecMock);
+        when(requestHeadersUriSpecMock.uri(CurrencyApiUrlUtils.getEndpoint(NbpEndpointsPattern.CURRENCIES_EXCHANGE_RATES)))
+                .thenReturn(requestHeadersSpecMock);
+        when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+        when(responseSpecMock.bodyToFlux(String.class)).thenReturn(Flux.just(getMockCurrenciesDataWithNullCurrencyExchangeRate()));
+
+        ExchangeRateValidationException exception = assertThrows(ExchangeRateValidationException.class,
+                () -> underTest.getExchangeRateByCurrencyCode(currencyCode));
+
+        assertEquals(EXCHANGE_RATE_IS_NULL.getMessage(), exception.getMessage());
     }
 
 }
