@@ -25,7 +25,7 @@ public class CurrencyController {
     private final CurrencyRequestInfoService currencyRequestInfoService;
 
     @PostMapping("/get-current-currency-value")
-    @Cacheable(value = "currency", key = "#currencyValueRequestDTO.currency")
+    @Cacheable(value = "currency", key = "#currencyValueRequestDTO")
     public ResponseEntity<ExchangeRateResponseDTO> getCurrentCurrencyValue(@RequestBody CurrencyValueRequestDTO currencyValueRequestDTO)
             throws JsonProcessingException {
         return ResponseEntity.status(HttpStatus.OK)
